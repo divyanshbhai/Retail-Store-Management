@@ -60,11 +60,11 @@ The Retail Store Management System is a comprehensive solution designed to strea
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/your-repository.git
+   git clone https://github.com/divyanshbhai/Retail-Store-Management.git
 
 2. **Navigate to the Project Directory**
    ```bash
-   cd your-repository
+   cd Retail-Store-Management
    ```
 
 3. **Install Dependencies**
