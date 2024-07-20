@@ -1,0 +1,65 @@
+body{
+    overflow: hidden;
+    background-color: #1a1972 !important;
+    height: 100vh;
+}
+
+.display{
+    height: 100vh;
+    display: flex;
+}
+
+.container{
+    height: 90vh;
+    overflow: auto;
+    padding: 50px 5px;
+    padding-bottom: 100px;
+    border-radius: 20px !important;
+    background-color: white !important;
+}
+
+
+/* Navbar */
+.navbar{
+    background-color: #1a1972 !important;
+    color: white !important;
+}
+
+/* Sidebar */
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 250px;
+    background-color: #1a1972 !important;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.sidebar-btn{
+    margin: 10px;
+}
+
+
+/* Index */
+.table{
+    font-size: 14px;
+}
+
+.table .btn{
+    font-size: 14px;
+}
+
+/* Edit and New */
+.form-div{
+    padding: 20px;
+    max-width: 400px;
+    text-align: left;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+
+/* Show */
+.show-action-btn{
+    display: flex;
+    justify-content: space-between;
+}

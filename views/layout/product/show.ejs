@@ -1,0 +1,33 @@
+<% layout("/boilerplate/index") %>
+<body>
+    <a href="/product" class="btn"><i class="fa-solid fa-arrow-left"></i></a>
+    <center>
+    <h2><%= product.name %></h2>
+    <p><%= product.description %></p>
+    <table class="table table-bordered table-striped" style="width: 50%;">
+        <tr>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        <tr>
+            <td><%= product.quantity %></td>
+            <td>₹<%= product.price %></td>
+        </tr>
+        <tr>
+            <th>Total value</th>
+            <td>₹<%= product.price*product.quantity%></td>
+        </tr>
+    </table>
+    <br><br>
+    <div class="row" style="width: 80%;">
+        <div class="col">
+            <a href="/product/<%= product._id %>/update" class="btn btn-success">Update</a>
+        </div>
+        <div class="col">
+            <form action="/product/<%= product._id %>?_method=DELETE" method="post">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    </center>
+</body>

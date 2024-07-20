@@ -1,0 +1,58 @@
+<% layout("/boilerplate/index") %>
+<body>
+    <% function formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthIndex = date.getMonth();
+        const year = date.getFullYear();
+        return `${day}-${monthNames[monthIndex]}-${year}`;
+    } %>
+
+
+    <a href="/order" class="btn"><i class="fa-solid fa-arrow-left"></i></a>
+    <center>
+    <h2><%= order.customerName %></h2>
+    <p><%= order.customerAddress %></p>
+    <p><%= formatDate(order.orderDate) %></p>
+    <table class="table table-bordered table-striped" style="width: 50%;">
+        <tr>
+            <th>Product</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        <% for(product of order.products){ %>
+            <tr>
+                <td><%= product.name %></td>
+                <td><%= product.description %></td>
+                <td><%= product.category %></td>
+                <td><%= product.quantity %></td>
+                <td>₹<%= product.price %></td>
+            </tr>
+        <% } %>
+    </table>
+    <br>
+    <table class="table table-bordered table-striped" style="width: 50%;">
+        <tr>
+            <th>Total Price</th>
+            <td>₹<%= order.totalAmount %></td>
+        </tr>
+    </table>
+    <div class="alert alert-success" role="alert">
+        <%= order.status %>
+      </div>
+    <br><br>
+    <div class="row" style="width: 80%;">
+        <div class="col">
+            <a href="/order/<%= order._id %>/update" class="btn btn-success">Update</a>
+        </div>
+        <div class="col">
+            <form action="/order/<%= order._id %>?_method=DELETE" method="post">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    </center>
+</body>

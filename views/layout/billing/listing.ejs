@@ -1,0 +1,40 @@
+<% layout("/boilerplate/index") %>
+<body>
+    <div style="margin: 20px;">
+        <table id="table" class="table table-bordered table-striped">
+            <thead class="table-primary">
+                <th>Bill Id</th>
+                <th>Customer Name</th>
+                <th>Contact</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th></th>
+            </thead>
+            <tbody>
+
+                <% function formatDate(dateString) {
+                    const date = new Date(dateString);
+                    const day = date.getDate();
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const monthIndex = date.getMonth();
+                    const year = date.getFullYear();
+                    return `${day}-${monthNames[monthIndex]}-${year}`;
+                } %>
+
+
+                <% for(order of orders) {%>
+                    <tr>
+                        <td><%= order._id %></td>
+                        <td><%= order.customerName %></td>
+                        <td><%= order.customerContact %></td>
+                        <td><%= formatDate(order.orderDate) %></td>
+                        <td>₹<%= order.totalAmount %></td>
+                        <td><%= order.status %></td>
+                        <td><a href="/bill/<%= order._id %>" class="btn btn-outline-info"><i class="fa-solid fa-file-invoice-dollar"></i></a></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</body>

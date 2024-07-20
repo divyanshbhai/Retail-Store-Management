@@ -1,0 +1,15 @@
+<% layout("/boilerplate/index") %>
+<body>
+    <div style="margin: 0 50px;">
+    <form action="/customer/<%= customer._id %>?_method=PUT" method="post">
+        <label for="name" class="form-lable">Customer Name</label>
+        <input type="text" name="customer[name]" value="<%= customer.name %>" class="form-control" id="name" placeholder="Customer Name" required>
+        <label for="contact" class="form-lable">Contact</label>
+        <input type="number" name="customer[contact]" value="<%= customer.contact %>" class="form-control" id="contact" placeholder="Contact" required>
+        <label for="address" class="form-lable">Address</label>
+        <input type="text" name="customer[address]" value="<%= customer.address %>" class="form-control" id="address" placeholder="Address" required>
+        <br>
+        <button type="submit" class="btn btn-primary">Update Customer</button>
+    </form>
+</div>
+</body>

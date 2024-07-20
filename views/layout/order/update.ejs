@@ -1,0 +1,160 @@
+<% layout("/boilerplate/index") %>
+<body>
+    <div style="margin: 0 50px;">
+        <form action="/order/<%= order.id %>?_method=PUT" method="post">
+            <input type="hidden" name="_method" value="PUT">
+            
+            <label for="customerName">Customer name</label>
+            <select name="order[customerName]" class="form-control" onchange="fetchCustomer(this)" id="customerName">
+                <option value="">Select Customer</option>
+                <% for(customer of customers) { %>
+                    <option value='<%= customer.name %>' data-contact='<%= customer.contact %>' data-address='<%= customer.address %>' <%= order.customerName === customer.name ? 'selected' : '' %>><%= customer.name %></option>
+                <% } %>
+            </select>
+            <label for="customerContact">Customer contact</label>
+            <input type="text" class="form-control" id="customerContact" name="order[customerContact]" placeholder="Customer Contact" readonly>
+            <label for="customerAddress">Customer address</label>
+            <input type="text" class="form-control" id="customerAddress" name="order[customerAddress]" placeholder="Customer Address" readonly>
+            <br>
+            <div class="card" style="padding: 20px;">
+                <table class="table">
+                    <tr>
+                        <th>Product name</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+                    <tbody id="tableBody">
+                        <% order.products.forEach((product, index) => { %>
+                            <tr>
+                                <td>
+                                    <select class="form-control" id="productName<%= index %>" onchange="fetchProduct(this, <%= index %>)" name="order[products][<%= index %>][name]">
+                                        <option value="">Choose Product</option>
+                                        <% for(productOption of products) { %>
+                                            <option value="<%= productOption.name %>" data-description="<%= productOption.description %>" data-category="<%= productOption.category %>" data-price="<%= productOption.price %>" <%= productOption.name === product.name ? 'selected' : '' %>><%= productOption.name %></option>
+                                        <% } %>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="description<%= index %>" name="order[products][<%= index %>][description]" placeholder="Description" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="category<%= index %>" name="order[products][<%= index %>][category]" placeholder="Category" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" id="price<%= index %>" name="order[products][<%= index %>][price]" placeholder="Price" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" id="quantity<%= index %>" name="order[products][<%= index %>][quantity]" placeholder="Quantity" required onchange="calculateTotal()" value="<%= product.quantity %>">
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <div class="col-10">
+                        <button type="button" style="width: 100%;" class="btn btn-primary" onclick="addProduct()">Add</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" style="width: 100%;" class="btn btn-danger" onclick="deleteProduct()">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <label for="totalAmount">Total Amount</label>
+            <input type="number" class="form-control" id="totalAmount" name="order[totalAmount]" placeholder="Total Price" readonly>
+            <label for="orderDate">Date</label>
+            <input type="date" class="form-control" id="orderDate" name="order[orderDate]" required value="<%= order.orderDate.toISOString().split('T')[0] %>">
+            <label for="status">Status</label>
+            <select name="order[status]" id="status" class="form-control">
+                <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                <option value="Completed" <%= order.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+                <option value="On Hold" <%= order.status === 'On Hold' ? 'selected' : '' %>>On Hold</option>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-primary">Update Order</button>
+        </form>
+
+        <script>
+            let productCount = <%= order.products.length %>;
+
+            function fetchCustomer(select) {
+                const selectedOption = select.options[select.selectedIndex];
+                document.getElementById('customerContact').value = selectedOption.getAttribute('data-contact');
+                document.getElementById('customerAddress').value = selectedOption.getAttribute('data-address');
+            }
+
+            function fetchProduct(select, index) {
+                const selectedOption = select.options[select.selectedIndex];
+                document.getElementById('description' + index).value = selectedOption.getAttribute('data-description');
+                document.getElementById('category' + index).value = selectedOption.getAttribute('data-category');
+                document.getElementById('price' + index).value = selectedOption.getAttribute('data-price');
+                calculateTotal();
+            }
+
+            function addProduct() {
+                const tableBody = document.getElementById('tableBody');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>
+                        <select class="form-control" id="productName${productCount}" onchange="fetchProduct(this, ${productCount})" name="order[products][${productCount}][name]">
+                            <option value="">Choose Product</option>
+                            <% for(productOption of products) { %>
+                                <option value="<%= productOption.name %>" data-description="<%= productOption.description %>" data-category="<%= productOption.category %>" data-price="<%= productOption.price %>"><%= productOption.name %></option>
+                            <% } %>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="description${productCount}" name="order[products][${productCount}][description]" placeholder="Description" readonly>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="category${productCount}" name="order[products][${productCount}][category]" placeholder="Category" readonly>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="price${productCount}" name="order[products][${productCount}][price]" placeholder="Price" readonly>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="quantity${productCount}" name="order[products][${productCount}][quantity]" placeholder="Quantity" required onchange="calculateTotal()">
+                    </td>
+                `;
+                tableBody.appendChild(newRow);
+                productCount++;
+            }
+
+            function deleteProduct() {
+                const tableBody = document.getElementById('tableBody');
+                if (tableBody.rows.length > 1) {
+                    tableBody.deleteRow(-1);
+                    productCount--;
+                    calculateTotal();
+                }
+            }
+
+            function calculateTotal() {
+                let total = 0;
+                for (let i = 0; i < productCount; i++) {
+                    const priceElement = document.getElementById('price' + i);
+                    const quantityElement = document.getElementById('quantity' + i);
+                    if (priceElement && quantityElement) {
+                        const price = parseFloat(priceElement.value) || 0;
+                        const quantity = parseInt(quantityElement.value) || 0;
+                        total += price * quantity;
+                    }
+                }
+                document.getElementById('totalAmount').value = total;
+            }
+
+            // Initialize customer and product fields
+            fetchCustomer(document.getElementById('customerName'));
+            document.querySelectorAll('select[id^="productName"]').forEach((select, index) => {
+                fetchProduct(select, index);
+            });
+            calculateTotal();
+        </script>
+    </div>
+</body>

@@ -1,0 +1,24 @@
+<% layout("/boilerplate/index") %>
+<body>
+    <div style="margin: 0 50px;">
+    <form action="/product" method="post">
+        <label for="name" class="form-lable">Product Name</label>
+        <input type="text" name="product[name]" class="form-control" id="name" placeholder="Product Name" required>
+        <label for="quantity" class="form-lable">Quantity</label>
+        <input type="number" name="product[quantity]" class="form-control" id="quantity" placeholder="Quantity" required>
+        <label for="price" class="form-lable">Price</label>
+        <input type="number" name="product[price]" class="form-control" id="price" placeholder="Price" required>
+        <label for="description" class="form-lable">Description</label>
+        <input type="text" name="product[description]" class="form-control" id="description" placeholder="Description" required>
+        <label for="category" class="form-lable">Category</label>
+        <select name="product[category]" id="category" class="form-control" required>
+            <option value="">Select Category</option>
+            <% for(category of categories){ %>
+                <option value="<%= category.name %>"><%= category.name %></option>
+            <% } %>
+        </select>
+        <br>
+        <button type="submit" class="btn btn-primary">Add Products</button>
+    </form>
+</div>
+</body>

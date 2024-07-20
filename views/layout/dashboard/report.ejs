@@ -1,0 +1,97 @@
+<% layout("/boilerplate/index") %>
+<style>
+    .col {
+        background-color: #1a1972;
+        margin: 20px;
+        padding: 20px;
+        border-radius: 12px;
+        color: white;
+    }
+</style>
+<body>
+    <center>
+        <div class="row">
+            <div class="col">
+                <h4>Total Customer</h4>
+                <h2><%= totalCustomers %></h2>
+                <a class="btn btn-warning" style="width: 100%;">Customer</a>
+            </div>
+            <div class="col">
+                <h4>Total Order</h4>
+                <h2><%= totalOrders %></h2>
+                <a class="btn btn-warning" style="width: 100%;">Order</a>
+            </div>
+            <div class="col">
+                <h4>Total Order Amount</h4>
+                <h2>₹<%= totalAmount %></h2>
+                <a class="btn btn-warning" style="width: 100%;">Amount</a>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div id="charts" class="row">
+            <div class="col" id="category_chart" style="width: 600px; height: 400px;"></div>
+            <div class="col" id="monthly_sales_chart" style="width: 600px; height: 400px;"></div>
+            <div class="col" id="top_products_chart" style="width: 600px; height: 400px;"></div>
+        </div>
+    </center>
+
+    <!-- Load the Google Charts library -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            // Category Chart
+            var categoryData = google.visualization.arrayToDataTable([
+                ['Category', 'Quantity Sold'],
+                <% for (let category in productCategorySales) { %>
+                    ['<%= category %>', <%= productCategorySales[category] %>],
+                <% } %>
+            ]);
+            var categoryOptions = {
+                title: 'Product Sales by Category',
+                pieHole: 0.4,
+                colors: ['#1a1972', '#e5e4e2']
+            };
+            var categoryChart = new google.visualization.PieChart(document.getElementById('category_chart'));
+            categoryChart.draw(categoryData, categoryOptions);
+
+            // Monthly Sales Chart
+            var monthlySalesData = google.visualization.arrayToDataTable([
+                ['Month', 'Sales Amount'],
+                <% for (let month in monthlySales) { %>
+                    ['<%= month %>', <%= monthlySales[month] %>],
+                <% } %>
+            ]);
+            var monthlySalesOptions = {
+                title: 'Monthly Sales Trend',
+                colors: ['#1a1972', '#e5e4e2'],
+                hAxis: {title: 'Month'},
+                vAxis: {title: 'Sales Amount'},
+            };
+            var monthlySalesChart = new google.visualization.ColumnChart(document.getElementById('monthly_sales_chart'));
+            monthlySalesChart.draw(monthlySalesData, monthlySalesOptions);
+
+            // Top Products Chart
+            var topProductsData = google.visualization.arrayToDataTable([
+                ['Product', 'Quantity Sold'],
+                <% top5Products.forEach(product => { %>
+                    ['<%= product[0] %>', <%= product[1] %>],
+                <% }) %>
+            ]);
+            var topProductsOptions = {
+                title: 'Top 5 Selling Products',
+                colors: ['#1a1972', '#e5e4e2'],
+                hAxis: {title: 'Product'},
+                vAxis: {title: 'Quantity Sold'},
+            };
+            var topProductsChart = new google.visualization.BarChart(document.getElementById('top_products_chart'));
+            topProductsChart.draw(topProductsData, topProductsOptions);
+        }
+    </script>
+</body>
